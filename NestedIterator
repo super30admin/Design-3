@@ -1,0 +1,31 @@
+public class NestedIterator implements Iterator<Integer> {
+    Stack<NestedInteger> stack = new Stack<>();
+    public NestedIterator(List<NestedInteger> nestedList) {
+        for(int i=nestedList.size()-1;i>=0;i--){
+                stack.push(nestedList.get(i));
+        }
+    }
+
+    @Override
+    public Integer next() { 
+        if(hasNext())
+            return stack.pop().getInteger();
+        return null;
+    }
+
+    @Override
+    public boolean hasNext() {
+        while(!stack.isEmpty()){
+            if(stack.peek().isInteger())
+                return true;
+            List<NestedInteger> temp = stack.pop().getList();
+            for(int i=temp.size()-1;i>=0;i--)
+                stack.push(temp.get(i));
+        }
+        return false;
+    }
+}
+
+// Space complexity O(n) where n is th total element in flatten list.
+// Time complexity is O(n) where n is the size of the given list.
+// Tested in leetcode.
