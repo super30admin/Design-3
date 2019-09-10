@@ -1,0 +1,78 @@
+class LRUCache {
+    class Node{
+    private int key;
+    private int val;
+    private Node next;
+    private Node prev;
+    
+    public Node(int key,int val){
+        this.key = key;
+        this.val = val;
+    }
+    }
+    private int count = 0;
+    private int capacity;
+    private HashMap<Integer,Node> map;
+
+    private Node head;
+    private Node tail;
+    
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+        this.head = new Node(0,0);
+        this.tail = new Node(0,0);
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        if(map.containsKey(key)){
+            Node temp = map.get(key);
+            deleteFromEnd(temp);
+            addTostart(temp);
+            return temp.val;
+        }
+        return -1;
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+           Node temp =  map.get(key); 
+            temp.val = value;
+             deleteFromEnd(temp); 
+            addTostart(temp);     
+
+        }
+        else{
+            Node curr = new Node(key,value);
+            map.put(key, curr);
+            if(count < capacity){
+                count++;
+            }
+            else{
+                Node tailprev =  tail.prev;
+                deleteFromEnd(tailprev); 
+                map.remove(tailprev.key);
+        }
+         addTostart(curr);  
+             
+    }
+    }
+    
+    public void addTostart(Node temp){
+        temp.prev = head;
+        temp.next = head.next;
+        head.next.prev = temp;
+        head.next = temp;
+    }
+    
+    public void deleteFromEnd(Node temp){ 
+        temp.prev.next = temp.next;
+        temp.next.prev = temp.prev;
+    }
+}
+
+// Time complexity is O(1)
+// Space complexity is O(k) where k is maximum capacity
+// Verified in Leetcode.
