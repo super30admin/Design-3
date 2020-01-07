@@ -1,5 +1,6 @@
 # Runs on Leetcode
-
+        # Runtime complexity - O(n) where n is umber of elemenst in the nested integer iterator including ones in list
+        # Memory complexity - O(1) excluding the result list
 
 
 # """
