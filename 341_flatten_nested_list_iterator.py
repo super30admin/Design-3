@@ -26,6 +26,8 @@ class NestedIterator:
     """
         https://leetcode.com/problems/flatten-nested-list-iterator/
         // Time Complexity : O(n)
+            'n' is the total number of elements in the nested list,
+            including the nested elements
         // Space Complexity : O(n)
     """
 
@@ -33,12 +35,12 @@ class NestedIterator:
         self.queue = deque()
         self._dfs(nestedList)
 
-    def _dfs(self, nums):
-        for num in nums:
-            if num.isInteger():
-                self.queue.append(num.getInteger())
+    def _dfs(self, nestedList):
+        for nested_integer in nestedList:
+            if nested_integer.isInteger():
+                self.queue.append(nested_integer.getInteger())
             else:
-                self._dfs(num.getList())
+                self._dfs(nested_integer.getList())
 
     def next(self) -> int:
         return self.queue.popleft()
