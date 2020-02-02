@@ -1,6 +1,6 @@
 # Design-3
 
-## Problem 1: Flatten Nested List Iterator (https://leetcode.com/problems/flatten-nested-list-iterator/)
+## Problem 77: Flatten Nested List Iterator (https://leetcode.com/problems/flatten-nested-list-iterator/)
 
 Given a nested list of integers, implement an iterator to flatten it.
 
@@ -20,7 +20,7 @@ Explanation: By calling next repeatedly until hasNext returns false,
              the order of elements returned by next should be: [1,4,6].
 
 
-## Problem 2: LRU Cache(https://leetcode.com/problems/lru-cache/)
+## Problem 78: LRU Cache(https://leetcode.com/problems/lru-cache/)
 
 Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
 
@@ -35,7 +35,6 @@ Could you do both operations in O(1) time complexity?
 Example:
 
 LRUCache cache = new LRUCache( 2 /* capacity */ );
-
 cache.put(1, 1);
 cache.put(2, 2);
 cache.get(1);       // returns 1
