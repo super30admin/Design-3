@@ -54,8 +54,9 @@ NestedIterator.prototype.hasNext = function() {
             // Otherwise, keep calling getList on the last element
             // And putting it back at the top of the stack
             // Until we get an integer
-            let curr = this.stack[this.stack.length - 1].getList();
-            this.stack.pop();
+
+            let curr = this.stack.pop().getList();
+
             for (let i = curr.length - 1; i >= 0; i--) {
                 // Add the elements of the list one by one to the top
                 // Of the stack
