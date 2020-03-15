@@ -1,0 +1,86 @@
+//Time Complexity = O(1) Space Complexity = O(Capacity)
+
+class Node {
+    int key, value;
+    Node prev;
+    Node next;
+    Node(int key, int value)
+    {
+        this.key = key;
+        this.value = value;
+    }
+}
+
+class LRUCache {
+    //Capacity, Head, Tail, Map
+    HashMap<Integer, Node> map;
+    int capacity;
+    Node head, tail;
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+        head = new Node(0, 0);
+        tail = new Node(0, 0);
+        
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        Node node = map.get(key);
+        if(node != null)
+        {
+           remove(node);
+           addHead(node);
+           return node.value; 
+        }
+        return -1;
+    }
+    
+    public void put(int key, int value) {
+        Node node = map.get(key);
+        if(node != null)
+        {
+            node.value = value;
+            remove(node);
+            addHead(node);
+        } else {
+            node = new Node(key, value);
+            addHead(node);
+            map.put(key, node);
+            //check for capacity constraints
+            if(map.size() > capacity)
+            {
+                Node cursor = tail.prev;
+                remove(cursor);
+                map.remove(cursor.key);
+            }
+        }
+        
+    }
+    // head --- 1 --- 2 --- 3 --- tail
+    // insert node at the head
+    private void addHead(Node node)
+    {
+        Node temp = head.next;
+        head.next = node;
+        node.next = temp;
+        node.prev = head;
+        temp.prev = node;
+    }
+    private void remove(Node node)
+    {
+        Node previousNode = node.prev;
+        Node nextNode = node.next;
+        
+        previousNode.next = nextNode;
+        nextNode.prev = previousNode;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
