@@ -64,3 +64,42 @@ public class NestedIterator implements Iterator<Integer> {
  * NestedIterator i = new NestedIterator(nestedList);
  * while (i.hasNext()) v[f()] = i.next();
  */
+
+
+//using queue
+
+//time - O(n) to build the queue and iterate over it
+//space - O(n) for the queue
+public class NestedIterator implements Iterator<Integer> {
+
+    Queue<Integer> support; 
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        support = new LinkedList<>();
+        flatten(nestedList); //flatten the i/p list of nested integers into a list of integers and store it in queue
+    }
+
+    @Override
+    public Integer next() {
+        return support.poll();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return (support.size() > 0);
+    }
+    
+    private void flatten(List<NestedInteger> nestedList) {
+        for(NestedInteger element : nestedList) 
+        {
+            if(element.isInteger())
+            {
+                support.offer(element.getInteger()); //add to queue
+            }
+            else
+            {
+                flatten(element.getList()); //recurse on the list
+            }
+        }
+    }
+}
