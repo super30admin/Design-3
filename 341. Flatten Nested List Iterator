@@ -1,0 +1,38 @@
+Time complexity: O(n)
+Space complexity: O(1)
+Did this code successfully submitted on leetcode: Yes
+
+public class NestedIterator implements Iterator<Integer> {
+
+    Queue<Integer> q = new LinkedList<Integer>();
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        fillQueue(nestedList);
+    }
+
+    @Override
+    public Integer next() {
+        return q.poll();
+    }
+
+    @Override
+    public boolean hasNext() {
+        if(q.isEmpty()) 
+            return false;
+        
+        return true;
+    }
+    
+    public void fillQueue(List<NestedInteger> nestList){
+         if(nestList == null) 
+             return;
+
+        for(NestedInteger li : nestList){
+             if(li.isInteger()) 
+                 q.offer(li.getInteger());
+             else
+                 fillQueue(li.getList());
+         }
+    }
+
+}
