@@ -15,6 +15,9 @@
  *     public List<NestedInteger> getList();
  * }
  */
+
+//TC: next() - O(1), hasNext(): O(1)
+//SC: O(n), n: length of nestedList
 public class NestedIterator implements Iterator<Integer> {
     Queue<Integer> q;
     public NestedIterator(List<NestedInteger> nestedList) {
@@ -50,6 +53,8 @@ public class NestedIterator implements Iterator<Integer> {
  * while (i.hasNext()) v[f()] = i.next();
  */
 
+//TC: next()-O(1), hasNext() - O(n), n: length of nestedList
+//SC: O(n), n: length of nestedList
 public class NestedIterator implements Iterator<Integer> {
     Stack<Iterator<NestedInteger>> st;
     NestedInteger nextEl;
