@@ -1,5 +1,5 @@
 //TC: O(1)
-//SC: O(capacity^2)
+//SC: O(capacity)
 
 class LRUCache {
     class Node{
