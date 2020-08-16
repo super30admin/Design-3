@@ -27,7 +27,7 @@ class LRUCache:
         self.cache={}
         self.head,self.tail=DLinkedNode(-1,-1),DLinkedNode(-1,-1)
         self.capacity=capacity
-        self.size=len(self.cache)
+        self.size=0
         self.head.next=self.tail
         self.tail.prev=self.head
 
@@ -39,8 +39,8 @@ class LRUCache:
                     self._remove_node(node)
                     self._add_node_tohead(node)
                     return result
-                return -1
-            return 
+            return -1
+            
 
     def put(self, key: int, value: int) -> None:
         ## If node is already existing in my cache
@@ -50,20 +50,21 @@ class LRUCache:
             node.val=value
             self._remove_node(node)
             self._add_node_tohead(node)
+
         else:
-            if self.size==self.capacity:
-                ## remove the least recently used node
-                tailprev=self.tail.prev
-                self._remove_node(tailprev)
-                ## Remove from Cache
-                del self.cache[tailprev.key]
-                ##self.size-=1
             newNode=DLinkedNode(key,value)
             newNode.key=key
             newNode.value=value
             self.cache[key]=newNode
             self._add_node_tohead(newNode)
-
+            self.size+=1
+            if self.size>self.capacity:
+                ## remove the least recently used node
+                tailprev=self.tail.prev
+                self._remove_node(tailprev)
+                ## Remove from Cache
+                del self.cache[tailprev.key]
+                self.size-=1
             
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
