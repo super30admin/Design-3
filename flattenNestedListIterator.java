@@ -1,3 +1,7 @@
+//time complexity: O(n) where n is the number of integers (individual and integers in list combined)
+//space complexity: O(n)
+//executed on leetcode: yes
+
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
