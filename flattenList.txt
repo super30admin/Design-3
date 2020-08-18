@@ -1,0 +1,41 @@
+//Time complexity O(n)
+//Space complexity O(n)
+/*
+-Keeping the list on the stacks of iterators, the iterator will keep track of integers 
+if not integers it will push it again to the stack and process it.So nextElem will always contain an 
+Integer
+-next() will return that integer only
+*/
+
+public class NestedIterator implements Iterator<Integer> {
+
+    Stack<Iterator<NestedInteger>> stk;
+    NestedInteger nextElem;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stk = new Stack();
+        stk.push(nestedList.iterator());
+    }
+
+    @Override
+    public Integer next() {
+        return nextElem.getInteger();
+    }
+
+    @Override
+    public boolean hasNext() {
+        while(!stk.isEmpty()){
+            if(!stk.peek().hasNext()){
+               stk.pop(); 
+            }
+            else if((nextElem = stk.peek().next()).isInteger()){
+                return true;
+            }
+            else{
+               stk.push(nextElem.getList().iterator());
+                
+            }
+        }
+        return false;
+    }
+}
+
