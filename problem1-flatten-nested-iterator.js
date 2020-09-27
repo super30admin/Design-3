@@ -1,34 +1,23 @@
-///**
-// * // This is the interface that allows for creating nested lists.
-//* // You should not implement it, or speculate about its implementation
-//* function NestedInteger() {
-//*
-//*     Return true if this NestedInteger holds a single integer, rather than a nested list.
-//*     @return {boolean}
-//*     this.isInteger = function() {
-//*         ...
-//*     };
-//*
-//*     Return the single integer that this NestedInteger holds, if it holds a single integer
-//*     Return null if this NestedInteger holds a nested list
-//*     @return {integer}
-//*     this.getInteger = function() {
-//*         ...
-//*     };
-//*
-//*     Return the nested list that this NestedInteger holds, if it holds a nested list
-//*     Return null if this NestedInteger holds a single integer
-//*     @return {NestedInteger[]}
-//*     this.getList = function() {
-//*         ...
-//*     };
-//* };
-//*/
-//  /**
-// * @constructor
-// * @param {NestedInteger[]} nestedList
-// */
-var NestedIterator;
+//https://leetcode.com/problems/flatten-nested-list-iterator/
+//// Time Complexity :
+//    next(): O(N) could potentially be a nested array to depth N at first element
+//    hasNext(): O(1) just checks if stack is empty
+//// Space Complexity : O(N) where N is max recursive depth at any 1 element in input
+//// Did this code successfully run on Leetcode : no
+//    (I printed output and it was correct in leetcode, not sure why it isn't working)
+//// Any problem you faced while coding this :
+
+//   leetcode was annoying, directions for this problem unclear
+
+//// Your code here along with comments explaining your approach
+
+// Have a queue
+// Push one element from input into the queue
+// if element is an integer just push that
+// if it is a list, push each individual element
+// everytime you next(), return queue front but also
+//    grab another element from input
+var NestedIterator, a, i, mn;
 
 NestedIterator = function(nestedList) {
   var ni;
@@ -41,14 +30,17 @@ NestedIterator = function(nestedList) {
 };
 
 NestedIterator.prototype.pushOne = function() {
-  var i, j, list, ref, results;
-  if (this.nestedList.isInteger()) {
-    return this.stack.push(this.nestedList.getInteger());
+  var element, i, j, ref, results;
+  element = this.nestedList.shift();
+  if (element == null) {
+    return;
+  }
+  if (!Array.isArray(element)) {
+    return this.stack.push(element);
   } else {
-    list = this.nestedList.getList();
     results = [];
-    for (i = j = 0, ref = list.size; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
-      results.push(this.stack.push(list[i]));
+    for (i = j = 0, ref = element.length; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+      results.push(this.stack.push(element[i]));
     }
     return results;
   }
@@ -59,7 +51,7 @@ NestedIterator.prototype.pushOne = function() {
 // * @returns {boolean}
 // */
 NestedIterator.prototype.hasNext = function() {
-  return this.stack.length > 1;
+  return this.stack.length > 0;
 };
 
 ///**
@@ -80,5 +72,20 @@ NestedIterator.prototype.next = function() {
 // * var i = new NestedIterator(nestedList), a = [];
 // * while (i.hasNext()) a.push(i.next());
 //*/
+mn = NestedIterator([[1, 1], 2, [1, 1]]);
+
+while (mn.hasNext()) {
+  console.log(mn.next());
+}
+
+i = new NestedIterator([[1, 1], 2, [1, 1]]);
+
+a = [];
+
+while (i.hasNext()) {
+  a.push(i.next());
+}
+
+a;
 
 //# sourceMappingURL=problem1-flatten-nested-iterator.js.map
