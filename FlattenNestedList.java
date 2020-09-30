@@ -1,3 +1,7 @@
+//Time Complexity: O(n+l) for recursion O(1) for hasnext and next
+//Space complexity: O(l+maxNodesinAList) - for recursive stack
+//Did run on leetcode: yes
+
 public class NestedIterator implements Iterator<Integer> {
     
     Queue<Integer> queue;
