@@ -1,0 +1,20 @@
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        def flatten_list(nested_List):
+            for i in nested_List: 
+                if i.isInteger():
+                    self.int_list.append(i.getInteger())
+                else: 
+                    flatten_list(i.getList())
+                    
+        self.int_list=[]
+        self.pos=-1
+        flatten_list(nestedList)
+        
+    
+    def next(self) -> int:
+        self.pos+=1
+        return self.int_list[self.pos]
+    
+    def hasNext(self) -> bool:
+        return self.pos+1<len(self.int_list)
