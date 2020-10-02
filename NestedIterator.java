@@ -30,7 +30,7 @@ empty list,
 [[1,2,[4,5,[8]]]] nested within nested
 [[[[[3,[6]]]]]] too many nested
 */
-/*Approach 3:
+/*Approach 1:
  * 1. Use a stack to store the list of elements.
  * 2. Use a property nextInt that always points to the next integer to be returned.
  * 3. hasNext method returns false if nextInt is null else returns true.
@@ -94,7 +94,7 @@ public class NestedIterator implements Iterator<Integer> {
 
 
 /*
- * Approach 1: Use queue to store flattened items.
+ * Approach 2: Use queue to store flattened items.
  * 1. Iterate through the elements present in the list. 
  * 2.If integer is encountered, add it to the queue.
  * 3. If a nested list is encountered, call the flatten method recursively and go to step1.
@@ -142,50 +142,6 @@ public class NestedIterator implements Iterator<Integer> {
     }
 }
  
- /*Approach 2: Use Stack  to flatten the list and queue to store flattened items */
- class NestedIterator_Stack_Queue implements Iterator<Integer> {
-    //Using queue to store list of elements 
-    Queue<Integer> que = new LinkedList<Integer>();
-    
-    public NestedIterator_Stack_Queue(List<NestedInteger> nestedList) {
-        flatten(nestedList);
-    }
-
-    @Override
-    public Integer next() {
-        if(hasNext()){
-            return que.poll();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public boolean hasNext() {
-        return !que.isEmpty();
-    }
-    
-    private void flatten(List<NestedInteger> list){
-        Stack<NestedInteger> stack = new Stack<NestedInteger>();
-        for(int i=list.size()-1; i >= 0 ; i--){
-            stack.push(list.get(i));
-        }
-        
-        //pop the elements in stack
-        while(!stack.isEmpty()){
-            NestedInteger item = stack.pop();
-            if(item.isInteger()){
-                que.add(item.getInteger());
-            } else {
-                List<NestedInteger> nestedList = item.getList();
-                for(int j=nestedList.size()-1; j>=0; j--){
-                    stack.push(nestedList.get(j));
-                }
-            }
-        }
-    }
-}
-
 
 /**
  * Your NestedIterator object will be instantiated and called as such:
