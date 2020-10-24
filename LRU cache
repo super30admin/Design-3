@@ -1,0 +1,86 @@
+// Time complexity: O(1); space complexity: : capacity  
+// for this question, we initailise the doubly linkedlist with dummy head and tail nodes because without using dummy nodes, if we need to remove the node from head or tail; we have to make multiple change of pointers for defining the head and tail;
+// Using dummy nodes, we can easily insert and delete at the head and tail of the LL
+// map -> to decrease the look up time; for inserting or deleting the nodes; maintaing the key for evry node makes the node accessible in O(1) time
+// doubly linkde list -> we maintian the order of linkedlist; in such a  way that most recent item is at the begining and least recent item is at the end
+// we would have used array  also, this it can also maintain the same order but deletin and insertion at any index of array is not possible in O(1) time; but it can be done in doubly linkded list;
+// dLL maintains pointers to prevois node and next nodes, through insertin and deletiona ta any index becomes vey easy ; by just changing the refernces; nodes gets deleted
+class ListNode{
+    ListNode next;
+    ListNode prev;
+    int key;
+    int val;
+    ListNode(int key, int value){
+        this.key = key;
+        this.val = value;
+    }
+}
+class LRUCache {
+    Map<Integer, ListNode> map;
+    int capacity;
+    ListNode head = new ListNode(-10, -10);
+    ListNode tail = new ListNode(-10, -10);
+    
+    public LRUCache(int capacity) {
+       map = new HashMap(capacity);
+        this.capacity = capacity;
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        int result;
+        ListNode node = map.get(key);
+        if(node == null) return -1;
+        result = node.val;
+        removeNode(node);
+        addToFront(node);
+        
+        return result;
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+           ListNode node = map.get(key);
+            node.val = value;
+            removeNode(node);
+            addToFront(node);
+        }else{
+            if(map.size() == capacity){
+               // first line 44 and then 45
+                // lines are dependent on each other
+                // first remove key from the map and then remove  the  previous node of tail node from LL
+                 map.remove(tail.prev.key);
+                removeNode(tail.prev);
+               
+            }
+            
+            ListNode node = new ListNode(key, value);
+         
+            addToFront(node);
+             map.put(key, node);
+        }
+    }
+    
+    public void removeNode(ListNode node){
+        ListNode temp = node.next;
+        ListNode previous = node.prev;
+        previous.next = temp;
+        temp.prev = previous;
+    }
+    
+    public void addToFront(ListNode node){
+        ListNode front = head.next;
+        head.next = node;
+        node.prev = head;
+        node.next = front;
+        front.prev = node;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
