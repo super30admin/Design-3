@@ -1,37 +1,71 @@
-// Time Complexity : O(capacity) for get() and put() operations 
-// Space Complexity : O(capacity) for cache HashMap + O(capacity) for rank HashMap 
-// Did this code successfully run on Leetcode : TLE, 17/18, test cases passed 
-// Any problem you faced while coding this : coming up with a way to keep track of the ranks for the items
-// that way could update and remove the one with max rank
+// Time Complexity : O(1) for get() and put() operations 
+// Space Complexity : O(capacity) for cache HashMap  
+// Did this code successfully run on Leetcode : yes 
+// Any problem you faced while coding this : no
 
 // Your code here along with comments explaining your approach
-// used two hashmaps one for cache, one to maintain rank of items
-// on get increment all other ranks by 1, set this one to 1
-// on put if under capacity do same as above and put entry in cache
-// else find and delete the key with max rank and repeat the above step
+// this would be a hashmap with doubly linkedlist implementation
 
 class LRUCache {
-    
-    HashMap<Integer, Integer> cache;
-    HashMap<Integer, Integer> rank;
-    int capacity;
+    class DoublyLinkedNode{
+        int key;
+        int value;
+        DoublyLinkedNode next = null;
+        DoublyLinkedNode prev = null;
 
+        public DoublyLinkedNode(int key, int value){
+            this.key = key;
+            this.value = value;
+        }
+
+        public DoublyLinkedNode(){
+        }
+    }
+    
+    DoublyLinkedNode head;
+    DoublyLinkedNode tail;
+    HashMap<Integer, DoublyLinkedNode> cache;
+    int capacity;
+    
+    private void removeNode(DoublyLinkedNode node){
+        DoublyLinkedNode prev = node.prev;
+        DoublyLinkedNode next = node.next;
+        
+        prev.next = next;
+        next.prev = prev;
+        
+        node.prev = null;
+        node.next = null;
+    }
+    
+    private void addToHead(DoublyLinkedNode node){
+        DoublyLinkedNode cur = head.next;
+        head.next = node;
+        node.prev = head;
+        
+        node.next = cur;
+        cur.prev = node;
+    }
+    
     public LRUCache(int capacity) {
         if(capacity>0){
+            cache = new HashMap<Integer, DoublyLinkedNode>(capacity);
+            head = new DoublyLinkedNode();
+            tail = new DoublyLinkedNode();
+            head.prev = null;
+            head.next = tail;
+            tail.prev = head;
+            tail.next = null;
             this.capacity = capacity;
-            this.cache = new HashMap(capacity, 1);
-            this.rank = new HashMap(capacity, 1);
         }
     }
     
     public int get(int key) {
-        if(cache.containsKey(key)){
-            int val = cache.get(key);
-            
-            incrementAllRanks();
-            rank.put(key, 1);
-            
-            return val;
+        DoublyLinkedNode node = cache.get(key);
+        if(node!=null){
+            removeNode(node);
+            addToHead(node);
+            return node.value;
         }
         else{
             return -1;
@@ -39,55 +73,23 @@ class LRUCache {
     }
     
     public void put(int key, int value) {
-        if(cache.containsKey(key)){
-            cache.put(key, value);
-            
-            incrementAllRanks();
-            rank.put(key, 1);
+        DoublyLinkedNode node = cache.get(key);
+        if(node!=null){
+            node.value = value;
+            removeNode(node);
+            addToHead(node);
         }
         else{
             if(cache.size()==capacity){
-                removeKeyWithMaxRank();
-           
-                cache.put(key, value);
-
-                incrementAllRanks();                
-                rank.put(key, 1);
+                int eldestItemKey = tail.prev.key;
+                removeNode(tail.prev);
+                cache.remove(eldestItemKey);
             }
-            else{
-                cache.put(key, value);
-                incrementAllRanks();   
-                rank.put(key, 1);
-            }
-        }
-    }
-    
-    private void incrementAllRanks(){
-        for(int k : rank.keySet()){
-            rank.put(k, rank.get(k)+1);
-        }
-    }
-    
-    private void removeKeyWithMaxRank(){
-        //get key with max value
-        int keyWithMaxRank = -1;
-        int maxRank = -1;
-        for(int k : rank.keySet()){
-            if(rank.get(k)>maxRank){
-                maxRank = rank.get(k);
-                keyWithMaxRank = k;
-            }
+            
+            DoublyLinkedNode newEntry = new DoublyLinkedNode(key, value);
+            addToHead(newEntry);
+            cache.put(key, newEntry);
         }
         
-        //remove k,v
-        cache.remove(keyWithMaxRank);
-        rank.remove(keyWithMaxRank);
     }
 }
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache obj = new LRUCache(capacity);
- * int param_1 = obj.get(key);
- * obj.put(key,value);
- */
