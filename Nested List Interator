@@ -1,0 +1,45 @@
+// Time complexity: Number of elements in to the list * k -> k: size of each element
+//space complexity: k : size of the element
+public class NestedIterator implements Iterator<Integer> {
+    
+    Stack<NestedInteger> stack;
+    List<Integer> output = new ArrayList<>();
+    int i =0;
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stack = new Stack<>();
+        for(int i = 0; i < nestedList.size(); i++){
+            if(nestedList.get(i).isInteger()){
+                output.add(nestedList.get(i).getInteger());
+            }
+            else{
+                dfs(nestedList.get(i).getList());
+                System.out.println(output);
+            }
+        }
+    }
+
+    @Override
+    public Integer next() {
+        Integer element =  output.get(i);
+        i++;
+        return element;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return i != output.size();
+    }
+   
+    public void dfs(List<NestedInteger> list){
+            for(int i = 0; i < list.size(); i++){
+                if(list.get(i).isInteger()){
+                output.add(list.get(i).getInteger());
+                }
+            else{
+                dfs(list.get(i).getList());
+                }
+            }
+        }
+    }
+    
