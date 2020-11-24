@@ -1,6 +1,8 @@
 # Time Complexity: O(1) - get, put
 # Space Complexity: O(n)
-class DoublyLinkedListNode:
+# Approach: Use a Doubly Linked List and Hashmap to keep track of elements - more comments in-line
+
+class ListNode:
     def __init__(self, key, val):
         self.key = key
         self.val = val
@@ -13,61 +15,68 @@ class LRUCache(object):
         """
         :type capacity: int
         """
+        # initialize a hashmap, sentinel head, tail nodes
         self.hashMap = {}
-        self.head = DoublyLinkedListNode(-1,-1)
-        self.tail = self.head
+        self.head = ListNode(-1,-1)
+        self.tail = ListNode(-1,-1)
         self.capacity = capacity
-        self.length = 0
+        self.head.next = self.tail
+        self.tail.prev = self.head
         
-
+    def deleteNode(self, node):
+        # Function to delete a node from DLL, given the node reference
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        
+    def addToHead(self, node):
+        # Function to add a node to the head pointer
+        node.next = self.head.next
+        node.prev = self.head
+        self.head.next = node
+        node.next.prev = node
+        
     def get(self, key):
         """
         :type key: int
         :rtype: int
         """
+        # Key not in cache, return -1
         if key not in self.hashMap:
             return -1
-        node = self.hashMap[key]
-        val = node.val
-        if node.next:
-            node.prev.next = node.next
-            node.next.prev = node.prev
-            self.tail.next = node
-            node.prev = self.tail
-            node.next = None
-            self.tail = node
-        return val
         
+        # Get the node
+        node = self.hashMap[key]
+        self.deleteNode(node)
+        self.addToHead(node)
+        return node.val
 
     def put(self, key, value):
             """
             :type key: int
             :type value: int
             """
+            # If key exists, update it's value and add it to head
             if key in self.hashMap:
                 node = self.hashMap[key]
                 node.val = value
-                if node.next:
-                    node.prev.next = node.next
-                    node.next.prev = node.prev
-                    self.tail.next = node
-                    node.prev = self.tail
-                    node.next = None
-                    self.tail = node   
+                self.deleteNode(node)
+                self.addToHead(node)
             else:
-                node = DoublyLinkedListNode(key, value)
+                # Key doesn't exist, create a new node
+                node = ListNode(key, value)
+                # If capacity is reached, evict the tail node - least recently used
+                if self.capacity == len(self.hashMap):
+                    tailPrev = self.tail.prev
+                    self.deleteNode(tailPrev)
+                    del self.hashMap[tailPrev.key]
+                # Add new node to head
+                self.addToHead(node)
                 self.hashMap[key] = node
-                self.tail.next = node
-                node.prev = self.tail
-                self.tail = node
-                self.length += 1
-                if self.length > self.capacity:
-                    remove = self.head.next
-                    self.head.next = self.head.next.next
-                    self.head.next.prev = self.head
-                    del self.hashMap[remove.key]
-                    self.length -= 1
-
+                    
+                
+                    
+                    
+           
 
 
 # Your LRUCache object will be instantiated and called as such:
