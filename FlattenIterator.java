@@ -1,4 +1,4 @@
-// Time Complexity :  O(N + L) - max len of nested array 
+// Time Complexity :  O(N)
 // Space Complexity : O(N) 
 // Did this code successfully run on Leetcode :Yes
 // Any problem you faced while coding this :No
