@@ -1,0 +1,46 @@
+from collections import OrderedDict
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.dict = OrderedDict()
+        
+
+    def get(self, key: int) -> int:
+        
+        # check whether the key exists in the dictionary
+        if(key not in self.dict):
+            return -1;
+        else:
+            # move the element to the end of the linkedlist to make it most recently used one
+            self.dict.move_to_end(key)
+            return self.dict[key]
+            
+        
+
+    def put(self, key: int, value: int) -> None:
+        # check whether the key exists in dictionary or not
+        if(key not in self.dict):
+            self.dict[key] = value;
+        else:
+            # move the element to the end of the linkedlist to make it most recently used one
+            self.dict.move_to_end(key)
+            # update the value present at the key
+            self.dict[key] = value
+        
+        # if the cache is full, remove the least recently used key,value pair
+        if(len(self.dict) > self.capacity):
+            self.dict.popitem(last = False);
+        
+        
+'''
+
+time complexity = O(1)
+space complexity = o(capacity)
+
+'''
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
