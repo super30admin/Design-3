@@ -1,0 +1,74 @@
+# """
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+# """
+#class NestedInteger:
+#    def isInteger(self) -> bool:
+#        """
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        """
+#
+#    def getInteger(self) -> int:
+#        """
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        """
+#
+#    def getList(self) -> [NestedInteger]:
+#        """
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        """
+
+class NestedIterator:
+    
+    
+                
+    
+    
+    def __init__(self, nestedList: [NestedInteger]):
+        # result array to store the all the integers of nested lists
+        self.result = []
+        self.fun(nestedList);
+        
+        # count variale to trace the current integer element processed
+        self.count = 0;
+    
+    # function to convert list of nested lists into list of integers
+    def fun(self, nestedlist):
+        for elt in nestedlist:
+            # if current elt is integer, push into the result list
+            if(elt.isInteger()):
+                self.result.append(elt.getInteger());
+                
+            # if the current element is list, invoke the same function on the current element
+            else:
+                self.fun(elt.getList());
+    
+    def next(self) -> int:
+        ans = -1
+        
+        # check whether the next element is present or not
+        if(self.hasNext()):
+            # return the element present at the count variable
+            ans = self.result[self.count];
+        self.count += 1;
+        return ans;
+        
+    
+    def hasNext(self) -> bool:
+        
+        # if count value is less than number of integers present in the result array, return true
+        return self.count < len(self.result)
+    
+    
+    '''
+    n = number of integers in the given input
+    time complexity = O(n)
+    space complexity = O(n)
+    '''
+         
+
+# Your NestedIterator object will be instantiated and called as such:
+# i, v = NestedIterator(nestedList), []
+# while i.hasNext(): v.append(i.next())
