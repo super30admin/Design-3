@@ -1,4 +1,9 @@
 class NestedIterator:
+    '''
+    Two stack solution
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+    '''
     def __init__(self, nestedList: [NestedInteger]):
         self.st = [nestedList]
         self.nextVal = [0]
