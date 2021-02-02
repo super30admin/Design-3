@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/lru-cache/
+// Space Complexity : O(N)
 class LRUCache {
     class Node {
         Node prev;
@@ -24,6 +26,7 @@ class LRUCache {
         head.next = tail;
     }
 
+    // Time Complexity : O(1)
     public int get(int key) {
         if (map.containsKey(key)) {
             insertFirst(map.get(key));
@@ -32,6 +35,7 @@ class LRUCache {
         return -1;
     }
 
+    // Time Complexity : O(1)
     public void removeLast() {
         map.remove(tail.prev.key);
         Node prev = tail.prev.prev;
@@ -39,6 +43,7 @@ class LRUCache {
         tail.prev = prev;
     }
 
+    // Time Complexity : O(1)
     public void insertFirst(Node curr) {
         if (curr.next != null && curr.prev != null) {
             curr.prev.next = curr.next;
@@ -51,6 +56,7 @@ class LRUCache {
         map.put(curr.key, curr);
     }
 
+    // Time Complexity : O(1)
     public void put(int key, int value) {
         if (map.containsKey(key)) {
             Node curr = map.get(key);
