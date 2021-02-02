@@ -1,0 +1,88 @@
+//Time Complexity: O(1)
+//Space complexity: O(n) n- number of nodes and keys we are storing in HashMap/capacity
+class LRUCache {
+    
+    class ListNode {
+        int key;
+        int value;
+        //doubly bcs we will need a access to prev nodes while removing
+        ListNode prev;
+        ListNode next;
+        
+        public ListNode(int key, int value){
+            this.key = key;
+            this.value = value;
+        } 
+    }
+
+    ListNode head;
+    ListNode tail;
+    int capacity;
+    HashMap<Integer,ListNode> map;
+    public LRUCache(int capacity) {
+        head = new ListNode(-1,-1);
+        tail = new ListNode(-1,-1);
+        head.next = tail;
+        tail.prev = head;
+        
+        this.capacity = capacity;
+        map = new HashMap<>();
+    }
+    
+    private void moveToHead(ListNode node){
+        //first assign prev and next to curr node
+        node.prev = head;
+        node.next = head.next;
+        //now replace head next as current node and next node's prev as curr node
+        head.next = node;
+        node.next.prev = node;
+    }
+    
+    private void remove(ListNode node){
+        //just point node's next prev to curr node's prev
+        //and node's prev node's next to node next
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
+    }
+    
+    public int get(int key) {
+        //if present remove node and move it to head
+        if(map.containsKey(key)){
+            ListNode curr = map.get(key);
+            remove(curr);
+            moveToHead(curr);
+            return curr.value;
+        }
+        return -1;
+    }
+    
+    public void put(int key, int value) {
+        //if present remove node and move it to head
+        if(map.containsKey(key)){
+            ListNode curr = map.get(key);
+            curr.value = value;
+            remove(curr);
+            moveToHead(curr);
+        } else{
+            //check capacity 
+            if(capacity == map.size()){
+                //if we reached the max capacity then remove the tail 
+                //dummy tail's prev
+                ListNode curr = tail.prev;
+                map.remove(curr.key);
+                remove(curr);
+            }
+            //add new node to map and add the node to doubly linked list
+            ListNode newNode = new ListNode(key,value);
+            map.put(key,newNode);
+            moveToHead(newNode);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */

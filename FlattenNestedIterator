@@ -1,0 +1,39 @@
+//Time complexity- O(1)
+//Space Complexity- O(N) N - max no of list in nestedList 
+public class NestedIterator implements Iterator<Integer> {
+    Stack<Iterator<NestedInteger>> st;
+    NestedInteger nextElmnt;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        st = new Stack<>();
+        //push the iterator of NestedInteger to stack
+        st.push(nestedList.iterator());
+    }
+
+    @Override
+    public Integer next() {
+        //print nextElement
+        return nextElmnt.getInteger();
+    }
+
+    @Override
+    //set next element for next iteration
+    public boolean hasNext() {
+        //stack is empty then return fasle
+        while(!st.isEmpty()){
+            //chcek top stack element has next element or not
+            //if not just pop the list out
+            if(!st.peek().hasNext()){
+                st.pop();
+            }
+            //if next element is integer return true and set nextElement
+            else if((nextElmnt = st.peek().next()).isInteger()) {
+                return true;
+            }
+            //push the list in stack
+            else {
+                st.push(nextElmnt.getList().iterator());
+            }
+        }
+        return false;
+    }
+}
