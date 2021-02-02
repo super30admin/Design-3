@@ -1,9 +1,8 @@
-hasNext()
-Time Complexity:    O(n)
-Space Complexity:   O(n) where n is maximum number of nestings inside main nestedInteger
-
-next()
-Time and Space: O(1)
+# hasNext()
+# Time Complexity:    O(n)
+# Space Complexity:   O(n) where n is maximum number of nestings inside main nestedInteger
+# next()
+# Time and Space: O(1)
 # Did this code successfully run on Leetcode : Yes
 # Any problem you faced while coding this : No
 
