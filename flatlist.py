@@ -22,6 +22,11 @@
     
 class NestedIterator:
     
+    """
+    Time Complexicity: O(n) for hasNext and O(1) for next
+    Space Complexicity: O(n)
+    """
+    
     def __init__(self, nestedList: [NestedInteger]):
         self.data = []
         self.current = -1
