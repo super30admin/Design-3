@@ -1,30 +1,52 @@
+
+//Time Complexity: Constructor O(1), makeStackTopAnInteger(), next(), hasNext() = O(1)
+//Space Complexity: O(n), where n is the maximum neseting depth (max num of lists inside each other)
+
+import java.util.NoSuchElementException;
+
 public class NestedIterator implements Iterator<Integer> {
+    
+    private Deque<ListIterator<NestedInteger>> stackOfIterators = new ArrayDeque();
+    private Integer peeked = null;
 
-private List<Integer> flattenedList;
-private Iterator<Integer> it;
-
-public NestedIterator(List<NestedInteger> nestedList) {
-    flattenedList = new LinkedList<Integer>();
-    flatten(nestedList);
-    it = flattenedList.iterator();
-}
-
-private void flatten(List<NestedInteger> nestedList) {
-    for (NestedInteger i : nestedList) {
-        if (i.isInteger()) {
-            flattenedList.add(i.getInteger());
-        } else {
-            flatten(i.getList());
-        }
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stackOfIterators.addFirst(nestedList.listIterator());
     }
-}
 
-@Override
-public Integer next() {
-    return it.next();
-}
+    private void setPeeked() {
+        
+        if (peeked != null) return;
+        
+        while (!stackOfIterators.isEmpty()) {
+    
+            if (!stackOfIterators.peekFirst().hasNext()) {
+                stackOfIterators.removeFirst();
+                continue;
+            }
 
-@Override
-public boolean hasNext() {
-    return it.hasNext();
+            NestedInteger next = stackOfIterators.peekFirst().next();
+            
+            if (next.isInteger()) {
+                peeked = next.getInteger();
+                return;
+            }
+            
+            stackOfIterators.addFirst(next.getList().listIterator());
+        }        
+    }
+    
+
+    @Override
+    public Integer next() {
+        if (!hasNext()) throw new NoSuchElementException();
+        Integer result = peeked;
+        peeked = null;
+        return result;
+    }
+
+    @Override
+    public boolean hasNext() {
+        setPeeked();
+        return peeked != null;
+    }
 }
