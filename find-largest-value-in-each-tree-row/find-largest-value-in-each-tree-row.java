@@ -1,44 +1,58 @@
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
  * }
  */
 class Solution {
-    List<Integer> result = new ArrayList<>();
-    public List<Integer> largestValues(TreeNode root) {
-        if(root ==null){
-            return result;
-        }
-        
-        dfs(root,0);
-        return result;
-    }
-    
-    private void dfs(TreeNode root,int height){
-        if(root==null)
-            return;
-        
-        
-        if(result.size() == height){
-            result.add(root.val);
-        }else{
-                result.set(height,Math.max(result.get(height),root.val));
-            }
-            
-            dfs(root.left,height+1);
-        dfs(root.right,height+1);    
-        }
-        
-        
-    }
-​
+    
+    List<Integer> result = new ArrayList<>();
+    public List<Integer> largestValues(TreeNode root) {
+        
+        if(root==null){
+            
+            return result;
+        }
+        Queue<TreeNode> qu = new LinkedList<>();
+        qu.add(root);
+        int max = Integer.MIN_VALUE;
+        while(!qu.isEmpty()){
+            int size = qu.size();
+            max = Integer.MIN_VALUE;
+            for(int i = 0 ;i<size;i++){
+                
+                TreeNode curr = qu.poll();
+                
+                if(curr.val > max){
+                    max = curr.val;
+                }
+                
+                if(curr.left!=null){
+                    
+                    qu.add(curr.left);
+                    
+                }
+                if(curr.right!=null){
+                    
+                    qu.add(curr.right);
+                    
+                }
+                
+            }
+            result.add(max);
+            
+            
+        }
+        return result;
+        
+    }
+}
