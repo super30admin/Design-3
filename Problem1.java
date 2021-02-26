@@ -1,7 +1,7 @@
 //Time complexity-O(n)
 //Space complexity-O(n)
-//Ran on leetcode-no
-//Solution with code- Failing null lost testcase
+//Ran on leetcode-yes
+//Solution with code- 
 
 /**
  * // This is the interface that allows for creating nested lists.
@@ -21,44 +21,32 @@
  * }
  */
 public class NestedIterator implements Iterator<Integer> {
-Stack<NestedInteger> st;//stack to store values of argument list
+    Queue<Integer> q ;//storing all value to the queue first
+    
     public NestedIterator(List<NestedInteger> nestedList) {
-        st= new Stack<NestedInteger>();
-        int i=nestedList.size()-1;
-        while( i>=0)
-        {
-            if(nestedList.get(i).isInteger()){//check if the element is integer
-                st.push(nestedList.get(i));
+            q= new LinkedList<>();
+            dfs(nestedList);
+    }
+    
+    public void dfs(List<NestedInteger> elements){
+        for(NestedInteger n: elements){
+            if(n.isInteger()){
+                q.add(n.getInteger());
             }
-            else if(nestedList.get(i).getList().size()!=0){//check if it is not an empty list
-                 st.push(nestedList.get(i));
+            else{
+                dfs(n.getList());//dfs for list in list
             }
-            i--;
         }
     }
 
     @Override
     public Integer next() {
-        if(st.peek().isInteger()){
-            return st.pop().getInteger();
-        }
-        else{
-            List<NestedInteger> inner= new ArrayList<NestedInteger>(st.pop().getList());
-            int i=inner.size()-1;
-                while(i>=0){
-                    st.push(inner.get(i));
-                    i--;
-                }
-            
-        }
-        return st.pop().getInteger();
+        return q.poll();
     }
 
     @Override
     public boolean hasNext() {
-        if(!st.isEmpty())
-            return true;
-        return false;
+        return !q.isEmpty();
     }
 }
 
