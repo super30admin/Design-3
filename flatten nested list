@@ -5,6 +5,7 @@
 recursively calling flatten
 
 // Your code here along with comments explaining your approach
+
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
@@ -23,34 +24,42 @@ recursively calling flatten
  * }
  */
 public class NestedIterator implements Iterator<Integer> {
-    Queue<Integer> q;
+    Stack<Iterator <NestedInteger>> s;
+    NestedInteger nextElement;
+    
     public NestedIterator(List<NestedInteger> nestedList) {
-        q = new LinkedList();
-        flatten(nestedList);
+        s = new Stack<>();
+        s.push(nestedList.iterator());
     }
 
     @Override
     public Integer next() {
-        return q.poll();
+        return nextElement.getInteger();
     }
 
     @Override
     public boolean hasNext() {
-        return !q.isEmpty();
-    }
-    
-    private void flatten(List<NestedInteger> nestedList)
-    {
-        for (NestedInteger element: nestedList)
+        
+        while(!s.isEmpty())
         {
-            if(element.isInteger())
-                q.add(element.getInteger());
+            if(!s.peek().hasNext())
+            {
+                s.pop();
+            }
+            else if((nextElement = s.peek().next( )).isInteger())
+            {
+                return true;
+            }
             else
             {
-                flatten(element.getList());
+                s.push(nextElement.getList().iterator());
             }
         }
+        
+        return false;
     }
+    
+   
 }
 
 /**
