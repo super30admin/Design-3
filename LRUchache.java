@@ -1,3 +1,4 @@
+import java.util.HashMap;
 
 // Time Complexity : O(1) 
 // Space Complexity : O(size)
@@ -39,7 +40,7 @@ public class LRUchache {
     Node tail;
     int capacity;
     
-    public LRUCache(int capacity) {
+    public void LRUCache(int capacity) {
         sMap=new HashMap<>();
         head=new Node(-1,-1);
         tail=new Node(-1,-1);
