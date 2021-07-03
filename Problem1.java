@@ -4,49 +4,54 @@
 // Space - O(N + D)  ArrayList size + Max depth of Recursive Stack for DFS
 
 
-import java.util.NoSuchElementException;
 public class NestedIterator implements Iterator<Integer> {
 
+    // declare a stack
+    Stack<Iterator<NestedInteger>> stk;
+    // declare nextEl
+    NestedInteger nextEl;
 
-    private List<Integer> integers = new ArrayList<>();
-    int position = 0; // Pointer to the next integer to return
     public NestedIterator(List<NestedInteger> nestedList) {
-
-        flattenList(nestedList); // call DFS
-
-
-    }
-
-    // Using DFS iterate through the list and get the integers by unpacking
-    private void flattenList(List<NestedInteger> nestedList) {
-
-        for(NestedInteger nestedInteger: nestedList) {
-
-            if(nestedInteger.isInteger()) {
-                integers.add(nestedInteger.getInteger());
-            }
-            else {
-                flattenList(nestedInteger.getList());
-            }
-
-        }
-
+        stk = new Stack<>();
+        // push all the nested list elements in the stack
+        stk.push(nestedList.iterator());
 
     }
+
 
     @Override
     public Integer next() {
-        // if no element after the current then throw exception
-        if(!hasNext()) throw new NoSuchElementException();
 
-        // return the current integer at the position and increment the position
-        return  integers.get(position++);
+        return nextEl.getInteger();
 
     }
 
     @Override
     public boolean hasNext() {
 
-        return position < integers.size();
+
+        while(!stk.isEmpty()) {
+
+            //case 1 - check if the pointer to the hasNext element has any element if not start popping the stack
+            if(!stk.peek().hasNext()) {
+                stk.pop();
+            }
+            // case 2 - if the nextEl element in the stk is Integer return true
+            else if((nextEl = stk.peek().next()).isInteger()) {
+
+                return true;
+
+            }
+            // case 3 - if the next element in the stk is not integer then push the list on top of the stack
+            else {
+                stk.push(nextEl.getList().iterator());
+            }
+
+
+        }
+
+        return false;
+
+
     }
 }
