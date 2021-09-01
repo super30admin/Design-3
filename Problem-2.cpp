@@ -1,11 +1,11 @@
 /*
 get() function
 Time Complexity = O(1)
-Space Complexity = O()
+Space Complexity = O(capacity)
 
 put() function
 Time Complexity = O(1)
-Space Complexity = O()
+Space Complexity = O(capacity)
 */
 class LRUCache {
 public:
