@@ -14,7 +14,7 @@
 5) if we exceed capacity, we can take away the least recent used node. 
 */
 
-
+import java.util.*;
 class LRUCache {
 
     class Node{
