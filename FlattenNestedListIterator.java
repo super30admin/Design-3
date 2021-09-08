@@ -1,47 +1,43 @@
 //https://leetcode.com/problems/flatten-nested-list-iterator/
 /*
-Time: Next, hasNext is O(1), constructor is O(N)
-Space: O(1)
+Time: Next, hasNext is O(1)
+Space: O(DeepestList)
 Did this code successfully run on Leetcode : Yes
 Any problem you faced while coding this : None
 */
-public class FlattenNestedListIterator {
-    List<Integer> result = null;
-    int current = 0;
+public class NestedIterator implements Iterator<Integer> {
 
-    public NestedIterator(List<NestedInteger> nestedList) 
-    {
-        result = new ArrayList<>();
-        
-        for(NestedInteger integer : nestedList)
-        {
-            helper(integer);
-        }
-        
+    NestedInteger nextEl;
+    Stack<Iterator<NestedInteger>> s; // because we need to do next, hasnext on it
+
+    public NestedIterator(List<NestedInteger> nestedList) {
+
+        s = new Stack<>();
+        s.push(nestedList.iterator());
+
     }
 
     @Override
     public Integer next() {
-        return result.get(current++);
-
+        return nextEl.getInteger();
     }
 
     @Override
     public boolean hasNext() {
-        return current < result.size();
-    }
 
-    private void helper(NestedInteger value) {
-        if (value.isInteger())
-            result.add(value.getInteger());
+        while (!s.isEmpty()) {
+            // case1 - top of stack has been processed
+            if (!s.peek().hasNext())
+                s.pop();
 
-        else // same as constructor code
-        {
-            for (NestedInteger integer : value.getList()) {
-                helper(integer);
-            }
+            // case2 - You see an integer, also remember to do peek.next
+            else if ((nextEl = s.peek().next()).isInteger())
+                return true;
+
+            // case3 - You see a list, just push the whole list
+            else
+                s.push(nextEl.getList().iterator());
         }
-
+        return false;
     }
-
 }
