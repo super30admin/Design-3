@@ -1,5 +1,5 @@
 # // Time Complexity :O(1) all the operation
-# // Space Complexity :O(n) hashmap and ll
+# // Space Complexity :O(n) n is the capacity
 # // Did this code successfully run on Leetcode :yes
 # // Any problem you faced while coding this :no
 
