@@ -1,0 +1,38 @@
+//Time: O(n), n is all elements in the list
+//Space: O(n) 
+public class NestedIterator {
+    Queue<int> queue;
+    public NestedIterator(IList<NestedInteger> nestedList) {
+        queue = new Queue<int>();
+        Flatten(nestedList);
+    }
+    
+    private void Flatten(IList<NestedInteger> nestedList) {
+        
+        foreach(NestedInteger ni in nestedList) {
+            if(ni.IsInteger()) {
+                queue.Enqueue(ni.GetInteger());
+            } else {
+                Flatten(ni.GetList());
+            }
+        }
+    }
+    
+    public bool HasNext() {
+        if(queue.Count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public int Next() {
+        return queue.Dequeue();
+    }
+}
+
+/**
+ * Your NestedIterator will be called like this:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.HasNext()) v[f()] = i.Next();
+ */
