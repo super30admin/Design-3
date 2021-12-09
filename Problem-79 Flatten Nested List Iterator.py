@@ -1,9 +1,6 @@
 # 341. Flatten Nested List Iterator
 # https://leetcode.com/problems/flatten-nested-list-iterator/
 
-# Time Complexiety: 
-# Space Complexiet: 
-
 # """
 # This is the interface that allows for creating nested lists.
 # You should not implement it, or speculate about its implementation
@@ -26,15 +23,31 @@
 #        Return None if this NestedInteger holds a single integer
 #        """
 
+# Logic: We reverse the input and store in the stack. When hasNext() is called, 
+# we check if stack has data and if the top element is an int. If it is an 
+# integer, we return true. If the top element is a list, we reverse the list 
+# and store it in the stack. When next() is called, we pop from the stack and 
+# return. hasNext() makes sure that the top element will always be an int.
 class NestedIterator:
-    def __init__(self, nestedList):
-        pass
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)
+    def __init__(self, nestedList: [NestedInteger]):
+        self.stack = nestedList[::-1]
     
+    # Time Complexity: O(1)
     def next(self) -> int:
-        pass
+        return self.stack.pop()
     
+    # Time Complexity: O(n)
     def hasNext(self) -> bool:
-         pass
+        while self.stack and self.stack[-1].getInteger() == None:
+            itr = self.stack.pop()
+            itr_list = itr.getList()
+            
+            for i in itr_list[::-1]:
+                self.stack.append(i)
+        return len(self.stack) > 0
+         
 
 # Your NestedIterator object will be instantiated and called as such:
 # i, v = NestedIterator(nestedList), []
