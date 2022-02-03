@@ -1,3 +1,52 @@
+// Time Complexity : O(H)  where H is the maximum number of nested lists
+// Space Complexity : O(H)  where H is the maximum number of nested lists
+public class NestedIterator implements Iterator<Integer> {
+    Stack<Iterator<NestedInteger>> s;
+    NestedInteger nextElement;
+    // Java's native iterator can be applied on collections as this is a list we can use it on it
+    public NestedIterator(List<NestedInteger> nestedList) {
+        s = new Stack<>();
+        s.push(nestedList.iterator());
+    }
+    
+
+    @Override
+    public Integer next() {
+        return nextElement.getInteger();
+    }
+
+    @Override
+    public boolean hasNext() 
+    {
+        while(!s.isEmpty())
+        {
+            if(!s.peek().hasNext()) //checks if iterator has any elements
+            {
+                // remove from stack once all elements have been processed
+                s.pop();
+            }
+            else
+            {
+                 // get the next Element from iterator
+                // next element can be NestedInteger or List
+                nextElement = s.peek().next();
+           
+                if(nextElement.isInteger()) // initialize next element and keep
+                {
+                    return true;
+                }
+                else
+                {
+                   // since a list, convert to iterator
+                    s.push(nextElement.getList().iterator());
+                }
+            }
+        }
+        return false;
+    }
+}
+
+
 // Time Complexity : O(N)
 // Space Complexity : O(N), where N is the number of elements
 /**
@@ -21,24 +70,21 @@ public class NestedIterator implements Iterator<Integer> {
     Queue<Integer> q;
     public NestedIterator(List<NestedInteger> nestedList) {
         q = new LinkedList<>();
-        for(NestedInteger list: nestedList)
-        {
-            flatten(list);
-        }
+        flatten(nestedList);
     }
     
     
-    private void flatten(NestedInteger list)
+    private void flatten(List<NestedInteger> nestedList)
     {
-        if(list.isInteger())
+        for(NestedInteger list : nestedList)
         {
-            q.add(list.getInteger());
-        }
-        else
-        {
-            for(NestedInteger currList : list.getList())
+            if(list.isInteger())
             {
-                flatten(currList);
+                q.add(list.getInteger());
+            }
+            else
+            {
+                flatten(list.getList());
             }
         }
     }
