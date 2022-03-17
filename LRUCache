@@ -1,0 +1,164 @@
+/**
+## problem
+Design LRU cache.
+
+## constraints & list out assumptions
+-capacity of 1000
+-At most 10^5
+
+## Test case:
+1) 1 , 2 ,3 ,3, 2,1,1,1,2
+
+## Approach
+
+cache (Map (key -> value))
+Doubly linkedlist treference
+
+Node -> key, value.
+
+
+1 3 5 6 4
+
+2 
+
+
+**/
+
+
+class LRUCache {
+    
+    final Map<Integer,Node> cache;
+    final DoublyLinkedList dl;
+    int cacheCapacity;
+
+    public LRUCache(int capacity) {
+        
+        cache = new HashMap<>();
+        dl = new DoublyLinkedList();
+        cacheCapacity = capacity;
+    }
+    
+    public int get(int key) {
+        
+        if (!cache.containsKey(key))
+        {
+            return -1;
+        }
+        
+        Node nodeToRemove = cache.get(key);
+        dl.delete(nodeToRemove);
+        Node nodeToInsert = new Node(nodeToRemove.val, key);
+        dl.insertAtTail(nodeToInsert);
+        cache.put(key, nodeToInsert);
+        
+        return nodeToRemove.val;  
+    }
+    
+    public void put(int key, int value) {
+        
+        if (cache.size() >= cacheCapacity)
+        {
+            // remove the element
+            Node nodeToRemove = dl.removeHead();
+            cache.remove(nodeToRemove.key);
+        }
+        else if (cache.containsKey(key))
+        {
+                Node nodeToRemove = cache.get(key);
+                dl.delete(nodeToRemove);
+        }
+
+        // insert the element
+        Node nodeToInsert = new Node(value, key);
+        dl.insertAtTail(nodeToInsert);
+        cache.put(key, nodeToInsert);
+    }
+}
+
+class Node
+{
+    int val;
+    int key;
+    Node next;
+    Node prev;
+    
+    Node(int val, int key)
+    {
+        this.key = key;
+        this.val = val;
+    }
+    
+}
+
+class DoublyLinkedList
+{
+    Node head;
+    Node tail;
+    
+    DoublyLinkedList()
+    {
+        head = null;
+        tail = null;
+    }
+    
+    public void insertAtTail(Node node)
+    {   
+        if (tail == null)
+        {
+            head = tail = node;
+            return;
+        }
+        
+        tail.next = node;
+        node.prev = tail;
+        tail = node;
+    }
+    
+    public void delete(Node node)
+    {
+        if (node == head)
+        {
+            head = head.next;
+            
+            if (head != null)
+            {
+                head.prev = null;                
+            }
+            
+            return;
+        }
+        
+        if (node == tail)
+        {
+            tail = node.prev;
+            tail.next = null;
+            return;
+        }
+        
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+    
+    public Node removeHead()
+    {
+        if (head == null)
+        {
+            return null;
+        }
+        
+        Node removedNode = head;
+        
+        head = head.next;
+        head.prev = null;
+        
+        return removedNode;
+    }
+}
+
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
