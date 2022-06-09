@@ -1,3 +1,5 @@
+import java.util.*;
+
 class LRUCache {
     // All methods have a time complexity of O(1)
     // Space can be neglected if we not considering software engineering hashmap and linkedlist
