@@ -1,0 +1,36 @@
+// Time Complexity : O(1)
+// Space Complexity : O(1)
+// Did this code successfully run on Leetcode : YES
+// Any problem you faced while coding this : NO
+
+
+public class NestedIterator implements Iterator<Integer> {
+    
+    private Queue<Integer> queue;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        queue = new LinkedList<>();
+        helper(nestedList);
+    }
+    
+    private void helper(List<NestedInteger> list){
+        if(list == null) return;
+        for(NestedInteger ele : list){
+            if(ele.isInteger()){
+                queue.add(ele.getInteger());
+            }
+            else{
+                helper(ele.getList());
+            }
+        }
+    }
+
+    @Override
+    public Integer next() {
+        return queue.poll();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !queue.isEmpty();
+    }
+}
