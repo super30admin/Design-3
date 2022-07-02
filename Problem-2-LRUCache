@@ -1,0 +1,71 @@
+//TC - O(1) - both get and put
+//SC - O(c) - capacity
+class LRUCache {
+    class Node
+    {
+        Node next;
+        Node prev;
+        int key, val;
+        public Node(int key,int val)
+        {
+            this.key = key;
+            this.val = val;
+            prev = null;
+            next = null;
+        }
+    }
+    private void removeNode(Node node)
+    {
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
+    }
+    private void addToHead(Node node)
+    {
+        node.next = head.next;
+        node.prev = head;
+        head.next = node;
+        node.next.prev = node;
+    }
+    Node head; Node tail;
+    HashMap<Integer, Node> map;
+    int capacity;
+    public LRUCache(int capacity) {
+        this.head = new Node(-1,-1);
+        this.tail = new Node(-1,-1);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key))return -1;
+        Node node = map.get(key);
+        removeNode(node);
+        addToHead(node);
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key))
+        {
+            Node node = map.get(key);
+            node.val = value;
+            removeNode(node);
+            addToHead(node);
+        }
+        else
+        {
+            if(capacity == map.size())
+            {
+                Node tailPrev = tail.prev;
+                removeNode(tailPrev);
+                map.remove(tailPrev.key);
+            }
+             Node newnode = new Node(key,value);
+             addToHead(newnode);
+             map.put(key,newnode);
+        }
+       
+    }
+}
