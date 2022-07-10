@@ -1,4 +1,4 @@
-#code using DFS. But this code is ging me an Error
+#code using DFS. But this code is giving me an Error
 '''
 
 class NestedIterator(object):
