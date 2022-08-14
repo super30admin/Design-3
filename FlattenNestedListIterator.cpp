@@ -1,3 +1,7 @@
+// Time Complexity -> Not Sure..
+// Space Complexity -> O(n)
+// Problems Faced - No!
+// It runs on Leetcode!
 class NestedIterator {
 
 public:
