@@ -37,6 +37,7 @@ class LRUCache:
         self.tail.prev = self.head
     # In this function, we do not the key in the hashmap, then simply return -1, but if present, then move the element to the head which is the recently
     # accessed element and return val of that node for that key
+    # Time : O(1)
     def get(self, key: int) -> int:
         if key not in self.cache:
             return -1
@@ -48,6 +49,7 @@ class LRUCache:
     # In order to place the element in the hashmap, we have to check if the key is not present in the hashmap, then we check for the capacity if does not
     # excced the limit, then we can simply place the element, but if not, then we'd have to remove an element from the tail and add our new key,
     # value to the head
+    # Time : O(1)
     def put(self, key: int, value: int) -> None:
         if key not in self.cache:
             if len(self.cache) == self.capacity:
