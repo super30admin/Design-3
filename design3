@@ -1,0 +1,50 @@
+Flatten Nested List Iterator
+#tc:O(1)
+#sc:O(h)
+class NestedIterator:
+    def __init__(self, nestedList: List[NestedInteger]):
+        def get(currList: List[NestedInteger]) -> Generator[int, None, None]:
+            """
+            Generator function to iterate through all nested NestedInteger objects and return its integer value.
+            :param currList: The current (nested) list of NestedIntegers to iterate through.
+            :yields:         The integer value of the current NestedInteger in the iteration.
+            """
+            for nestedInteger in currList:
+                if nestedInteger.isInteger():  # nestedInteger has a single integer value
+                    yield nestedInteger.getInteger()
+                else:                          # nestedInteger is a list of NestedIntegers
+                    yield from get(nestedInteger.getList())
+        self.generator = get(nestedList)               # Initialise the generator object with the given NestedInteger list
+        self.nextInteger = next(self.generator, None)  # Obtain the next (first) NestedInteger pre-emptively
+    
+    def next(self) -> int:
+        result = self.nextInteger                      # store the current NestedInteger integer value
+        self.nextInteger = next(self.generator, None)  # Obtain the next NestedInteger pre-emptively
+        return result
+    
+    def hasNext(self) -> bool:
+        return self.nextInteger is not None
+
+
+LRU Cache
+#tc:O(n)
+#sc:O(n)
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.values = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.values:
+            return -1
+        else:
+            self.values[key] = self.values.pop(key)
+            return self.values[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key not in self.values:
+            if len(self.values) == self.capacity:
+                self.values.popitem(last=False)
+        else:
+            self.values.pop(key)
+        self.values[key] = value
