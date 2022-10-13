@@ -1,0 +1,83 @@
+class LRUCache {
+    
+    class Node{
+        int key;
+        int value;
+        Node next;
+        Node prev;
+        public Node(int key,int value){
+            this.key=key;
+            this.value=value;
+        }
+        
+    }
+    Node head;
+    Node tail;
+    int capacity;
+    
+    HashMap<Integer,Node> hm=new HashMap<>();
+    public void getToHead(Node n){
+     
+        n.next=head.next;
+        n.prev=head;
+        head.next=n;
+        n.next.prev=n;
+        
+        
+    }
+    public void remove(Node n){
+           n.prev.next=n.next;
+        n.next.prev=n.prev;
+    }
+    
+
+    public LRUCache(int capacity) {
+        head=new Node(-1,-1);
+        tail=new Node(-1,-1);
+        head.next=tail;
+        tail.prev=head;
+        this.capacity=capacity;
+        
+    }
+    
+    public int get(int key) {
+        if(!hm.containsKey(key)){
+          return -1;
+           
+        }
+         Node n=hm.get(key);
+            
+            remove(n);
+            getToHead(n);
+        
+        return n.value;
+    }
+    
+    public void put(int key, int value) {
+        if(!hm.containsKey(key)){
+            if(capacity==hm.size()){
+                Node tailPrev=tail.prev;
+                remove(tailPrev);
+                hm.remove(tailPrev.key);
+            }
+            Node n=new Node(key,value);
+            hm.put(key,n);
+            getToHead(n);
+        }else{
+            Node m=hm.get(key);
+            m.value=value;
+            hm.replace(key,m);
+            remove(m);
+            getToHead(m);
+        }
+        
+        
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
