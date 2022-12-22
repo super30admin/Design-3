@@ -1,4 +1,4 @@
-//TC:O(n)
+//TC:O(1) on avg 
 //SC:O(n)
 
 public class LRU_cache {
