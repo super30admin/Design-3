@@ -1,4 +1,6 @@
-//
+//Time Complexity :  O(1) for get, put operations
+//Space Complexity :  O(n)
+//Did this code successfully run on Leetcode : Yes
 
 import java.util.*;
 
