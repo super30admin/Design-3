@@ -1,0 +1,44 @@
+
+
+public class NestedIterator implements Iterator<Integer> {
+
+    Stack<Iterator<NestedInteger>> st;
+    NestedInteger nextElement;
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        this.st = new Stack<>();
+        st.push(nestedList.iterator());
+    }
+
+//TimeComplexity.    O(1)
+    @Override
+    public Integer next() {
+        return nextElement.getInteger();
+    }
+
+//TimeComplexity.    O(1)
+    @Override
+    public boolean hasNext() {
+        
+        while(!st.isEmpty()){
+            
+            //check if the next element is null
+            if(!st.peek().hasNext()){
+                st.pop();
+                //check if the element is integer
+            }else if((nextElement = st.peek().next()).isInteger()){
+                return true;
+                //push the list into stack
+            }else{
+                st.push((nextElement.getList()).iterator());
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
