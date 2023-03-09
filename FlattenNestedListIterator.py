@@ -20,9 +20,55 @@
 #        Return None if this NestedInteger holds a single integer
 #        """
 
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.stack = []
+        self.cursor = None
+        #if nestedlist exists push the iterator of nestedlist into stack
+        if nestedList:
+            self.stack.append(iter(nestedList))
+        
 
-#All TC passed on leetcode
+    #Time complexity - O(1) 
+    #Space complexity - O(1)
+    def next(self) -> int:
+        #cursor points to next element, hence return the value in cursor 
+        val = self.cursor
+        self.cursor = None
+        return val
+        
 
+        
+    #Time complexity - O(1) averagely, but worst case O(d) where d is the depth of list
+    #Space complexity - O(1) averagely, but worst case O(d) where d is the depth of list
+    def hasNext(self) -> bool:
+
+        while self.stack and self.cursor==None:
+            
+            #check if the top of stack has an iterator which 
+            #holds nested list of nested integer
+            iterator = self.stack[-1]
+            curNested = next(iterator, None)
+
+            #if the iterator has no next elements then pop it from the stack
+            if curNested == None:
+                self.stack.pop()
+                continue
+            
+            #if the iterator next element is integer then set it to cursor and return True
+            #else push the ietrator of the nested list into stack.
+            if curNested.isInteger():
+                self.cursor = curNested.getInteger()
+                return True
+            else:
+                self.stack.append(iter(curNested.getList()))
+        
+
+        return False
+        
+
+
+#-------------------------------------OR-------------------------------------------------
 
 class NestedIterator:
     def __init__(self, nestedList: [NestedInteger]):
@@ -30,8 +76,6 @@ class NestedIterator:
         for i in range(len(nestedList)-1, -1, -1):
             self.stack.append(nestedList[i])
         
-       
-
 
     #Time complexity - O(1) 
     #Space complexity - O(1)
@@ -56,9 +100,9 @@ class NestedIterator:
         return True #if top of stack is integer return true
         
 
-#-------------------------------------OR-------------------------------------------------
+# #-------------------------------------OR-------------------------------------------------
 
-#below solution does not behave like iterator 
+# #below solution does not behave like iterator 
 
 class NestedIterator:
     def __init__(self, nestedList: [NestedInteger]):
