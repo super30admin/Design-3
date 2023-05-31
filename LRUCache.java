@@ -65,7 +65,7 @@ public class LRUCache {
             addToHead(currentNode);
         }else {
 
-            // Cache reached its upper bound. So, need to remove the least used node
+            // The Cache reached its upper bound. So, need to remove the least used node
             if(this.capacity == map.size()) {
                 Node tailPrev = tail.prev;
                 removeNode(tailPrev);

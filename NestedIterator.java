@@ -22,11 +22,12 @@ public class NestedIterator implements Iterator<Integer> {
         while(!stack.isEmpty()) {
             // hasNext & next on stack.top() / stack.peek() object are the native methods since we are storing the iterator in the stack
                 // and not NestedInteger
+            nextEl = stack.peek().next();
             if(!stack.peek().hasNext()) {
                 // The current iterator for NestedInteger object does not have anything to process
                 // In short, we are done with processing a list (either a sublist of the input list OR the entire input list)
                 stack.pop();
-            }else if((nextEl = stack.peek().next()).isInteger()) {
+            }else if(nextEl.isInteger()) {
                 return true;
             }else {
                 // If the current NestedInteger object is a list then put on top of the stack
