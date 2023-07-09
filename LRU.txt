@@ -1,0 +1,70 @@
+// Time complexity o(n) Space Compleity o(n)
+import java.util.HashMap;
+
+class LRUCache {
+    public class Node {
+        Node next, prev;
+        int key, val;
+
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
+
+    Node head, tail;
+    HashMap<Integer, Node> map;
+    int capacity;
+
+    public LRUCache(int capacity) {
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head.next = tail;
+        head.prev = null;
+        tail.prev = head;
+        tail.next = null;
+        map = new HashMap<>();
+        this.capacity = capacity;
+    }
+
+    public void remove(Node curr) {
+        curr.prev.next = curr.next;
+        curr.next.prev = curr.prev;
+        curr.next = null;
+        curr.prev = null;
+    }
+
+    public void addToHead(Node curr) {
+        curr.prev = head;
+        curr.next = head.next;
+        head.next = curr;
+        curr.next.prev = curr;
+    }
+
+    public int get(int key) {
+        Node curr = map.get(key);
+        if (curr == null)
+            return -1;
+        remove(curr);
+        addToHead(curr);
+        return curr.val;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node curr = map.get(key);
+            curr.val = value;
+            remove(curr);
+            addToHead(curr);
+        } else {
+            if (map.size() >= capacity) {
+                Node curr = tail.prev;
+                remove(curr);
+                map.remove(curr.key);
+            }
+            Node newNode = new Node(key, value);
+            addToHead(newNode);
+            map.put(key, newNode);
+        }
+    }
+}
