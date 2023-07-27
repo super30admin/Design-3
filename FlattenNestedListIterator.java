@@ -4,9 +4,8 @@
 // Any problem you faced while coding this : No
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Stack;
 
 // This is the interface that allows for creating nested lists.
 // You should not implement it, or speculate about its implementation
@@ -27,33 +26,30 @@ interface NestedInteger {
 }
 
 class NestedIterator implements Iterator<Integer> {
-    Queue<Integer> q = new LinkedList<>();
+    private NestedInteger nextInt;
+    private Stack<Iterator<NestedInteger>> stack;
 
     public NestedIterator(List<NestedInteger> nestedList) {
-        fillQueue(nestedList);
+        stack = new Stack<Iterator<NestedInteger>>();
+        stack.push(nestedList.iterator());
     }
 
     @Override
     public Integer next() {
-        return q.poll();
+        return nextInt != null ? nextInt.getInteger() : null; // Just in case
     }
 
     @Override
     public boolean hasNext() {
-        if (q.isEmpty())
-            return false;
-        return true;
-    }
-
-    public void fillQueue(List<NestedInteger> nestList) {
-        if (nestList == null)
-            return;
-        for (NestedInteger li : nestList) {
-            if (li.isInteger())
-                q.offer(li.getInteger());
+        while (!stack.isEmpty()) {
+            if (!stack.peek().hasNext())
+                stack.pop();
+            else if ((nextInt = stack.peek().next()).isInteger())
+                return true;
             else
-                fillQueue(li.getList());
+                stack.push(nextInt.getList().iterator());
         }
+        return false;
     }
 }
 
