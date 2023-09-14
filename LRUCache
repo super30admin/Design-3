@@ -1,0 +1,85 @@
+// Here we are using doubly LL to iterate over elements.
+// We will maintain both head and tail pointers
+// get() operation: we will perfrom remove operation and then add in front of list.
+//Remove: O(1)
+// node.next.prev = node.prev
+// node.prev.next = node.next
+
+//Add operation/inserting head of list: O(1)
+// node.next = head.next
+// node.prev = head
+// head.next = node
+// node.next.prev = node.
+
+
+class LRUCache{
+
+    class Node{
+        int key;
+        int value;
+        Node next;
+        Node prev;
+        public Node(int key, int value){
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    HashMap<Integer, Node> map;
+    int cap;
+    Node head;
+    Node tail;
+
+    public LRUCache(int cap){
+        this.cap = cap;
+        this.map = new HashMap<>();
+        this.head = new Node(-1,-1);
+        this.tail = new Node(-1,-1);
+        head.next = tail;
+        tail.prev = head;
+
+    }
+
+    public int get(int key){
+        if(!map.containsKey(key)){
+            return -1;
+        }
+        Node node = map.get(key); //Get the refer of the node.
+        remove(node);
+        addToHead(node);
+        return node.value;
+    }
+
+    public void put(int key, int value){
+        if(map.containsKey(key)){
+            //its existing elemtn.
+            Node node = map.get(key);
+            node.value = value;
+            remove(node);
+            addToHead(node);
+        }else{ //fresh
+            //if not existing then check for capacity and insert.
+            if(cap == map.size()){ //If capacity is full then remove from tail and add to previous
+                //remove a node
+                Node tailPrev = tail.prev;
+                remove(tailPrev);
+                map.remove(tailPrev.key);
+            }
+            Node newNode = new Node(key, value);
+            addToHead(newNode);
+            map.put(key,newNode);
+        }
+    }
+
+    private void remove(Node node){
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
+    }
+    private void addToHead(Node node){
+        node.next = head.next;
+        node.prev = head;
+        head.next = node;
+        node.next.prev = node;
+    }
+
+}
