@@ -1,120 +1,71 @@
-import java.util.HashMap;
-import java.util.Map;
+// Time Complexity:  O(1)
+// Space Complexity: O(n)
 
+class LRUCache {
 
-// ***************************** without dummy nodes *****************************
-public class LRUcache {                                                // CLASS LRUCACHE
+    class Node {                                         // Node used for maintaining sequence as a LinkedList
+        int key; int val;
+        Node next; Node prev;
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
 
     int capacity;
-    Map<Integer, DLLNode> map;
-    DLL list;
+    Node dummyHead; Node dummyTail;                     // dummy nodes
+    Map<Integer, Node> map;                             // map key->node for updating value and accessing nodes in O(1) time
 
-    public LRUcache(int capacity) {                                    // constructor
+    public LRUCache(int capacity) {
         this.capacity = capacity;
-        map = new HashMap<>();
-        list = new DLL();
+        this.dummyHead = new Node(-1, -1);
+        this.dummyTail = new Node(-1, -1);
+        dummyHead.next = dummyTail;
+        dummyTail.next = dummyHead;
+        this.map = new HashMap<>();
     }
-
-    public int get(int key) {                                          // get
-        DLLNode node = map.get(key);
-        if(node == null) {
+    
+    public int get(int key) {
+        if(!map.containsKey(key))                       // if key not there, invalid
             return -1;
-        }
-        list.remove(node);
-        list.addLast(node);
-        return node.value;
+        Node node = map.get(key);                       // get node
+        removeNode(node);                               // remove it from LinkedList
+        addNodeHead(node);                              // add it to head(for most recently used)
+        return node.val;
     }
-
-    public void put(int key, int value) {                              // put
-
-        DLLNode node = map.get(key);
-
-        // if node not present
-        if(node == null) {
-            if(map.size() == capacity) {
-                // remove LRU node
-                map.remove(list.head.key);
-                list.remove(list.head);
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)) {                      // if key is already there
+            Node node = map.get(key);                   // get node
+            node.val = value;                           // change node value only(no need to update map value(which is node))
+            removeNode(node);                           // remove it from LinkedList
+            addNodeHead(node);                          // add it to head(for most recently used)
+        }
+        else {                                          // if key not there, new node coming
+            if(map.size() == capacity) {                // and LinkedList is full
+                Node LRUNode = dummyTail.prev;          // get LRU node
+                removeNode(LRUNode);                    // remove it from LinkedList
+                map.remove(LRUNode.key);                // remove it from map
+                System.out.println("map size: "+map.size()+" key: "+key);
             }
-            node = list.addLast(key, value);
-            map.put(key, node);
+            Node newNode = new Node(key, value);        // LinkedList is not full, create new node
+            addNodeHead(newNode);                       // add it to head(for most recently used)
+            map.put(key, newNode);                      // add it to map
         }
+    }
 
-        // if node present
-        else {
-            list.remove(node);
-            node.value = value;
-            list.addLast(node);
-        }
+    private void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
 
+    private void addNodeHead(Node node) {
+        node.next = dummyHead.next;
+        node.prev = dummyHead;
+        dummyHead.next.prev = node;
+        dummyHead.next = node;
     }
 }
-
-
-
-class DLL {                                                           // CLASS DLL
-    DLLNode head, tail;
-
-    DLL() {                                                           // constructor
-        head = tail = null;
-    }
-
-    public void addLast(DLLNode node) {                               // add last existing node
-
-        if(head == null && tail == null) {
-            head = tail = node;
-        }
-
-        else {
-            tail.next = node;
-            node.prev = tail;
-            tail = node;
-        }
-    }
-
-    public DLLNode addLast(int key, int value) {                      // add last new node
-        DLLNode node = new DLLNode(key, value);
-        addLast(node);
-        return node;
-    }
-
-    public void remove(DLLNode node) {                               // remove node
-
-        if(node == head && node == tail) {
-            head = tail = null;
-        }
-
-        else if(node == head) {
-            head = head.next;
-            head.prev = null;
-            node.next = null;
-        }
-
-        else if(node == tail) {
-            tail = tail.prev;
-            tail.next = null;
-            node.prev = null;
-        }
-
-        else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-            node.prev = null;
-            node.next = null;
-        }
-    }
-}
-
-
-class DLLNode {                                                      // CLASS DLLNODE
-    int key, value;
-    DLLNode prev, next;
-    DLLNode(int key, int value) {                                    // constructor
-        this.key = key;
-        this.value = value;
-    }
-}
-
 
 /**
  * Your LRUCache object will be instantiated and called as such:
