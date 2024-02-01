@@ -1,0 +1,28 @@
+# Flatten Nested List Iterator
+
+#Time Complexity: O(N) for both next() and hasNext() methods.
+#Space Complexity: O(N) due to the stack used for traversal.
+
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        # Initialize the stack to hold iterators
+        self.stack = nestedList[::-1]
+
+    def next(self) -> int:
+        # hasNext ensures that the stack top is always an integer
+        return self.stack.pop().getInteger()
+
+    def hasNext(self) -> bool:
+        # Continue flattening the nested structure until we find an integer
+        while self.stack:
+            # Peek the top of the stack
+            curr = self.stack[-1]
+            if curr.isInteger():
+                return True
+            # If it's a list, pop it from the stack and extend the stack with its elements in reverse order
+            self.stack = self.stack[:-1] + curr.getList()[::-1]
+        return False
+
+
+
+
