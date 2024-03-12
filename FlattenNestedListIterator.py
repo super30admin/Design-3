@@ -1,0 +1,56 @@
+'''
+TC: O(1)
+SC: O(n) - capacity of the list pushed in stack
+'''
+# """
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+# """
+#class NestedInteger:
+#    def isInteger(self) -> bool:
+#        """
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        """
+#
+#    def getInteger(self) -> int:
+#        """
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        """
+#
+#    def getList(self) -> [NestedInteger]:
+#        """
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        """
+
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.stack = []
+        self.stack.append(iter(nestedList))
+        self.currVal = None        
+    
+    def next(self) -> int:
+        return self.currVal        
+    
+    def hasNext(self) -> bool:
+        if self.stack:
+            current = self.stack[-1]
+            element = next(current, None)
+            if element is None:
+                self.stack.pop()
+                return self.hasNext()
+            else:
+                if element.isInteger():
+                    self.currVal = element.getInteger()
+                    return True
+                else:
+                    self.stack.append(iter(element.getList()))
+                    return self.hasNext()
+        else:
+            return False
+         
+
+# Your NestedIterator object will be instantiated and called as such:
+# i, v = NestedIterator(nestedList), []
+# while i.hasNext(): v.append(i.next())
