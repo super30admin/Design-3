@@ -1,0 +1,93 @@
+// Time Complexity : O(1)
+// Space Complexity : O(n + n) n is capacity , n for hashmap and n for linkedlist
+// Did this code successfully run on Leetcode : Yes
+// Any problem you faced while coding this : No
+
+/* node structure that stores the key value and the next and prev node reference */
+class Node {
+    int key;
+    int value;
+    Node pre;
+    Node next;
+
+    public Node(int key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+}
+
+/* main class to the for the LRU cache */
+public class LRUCache {
+
+    /* hashmap and the head and tail */
+    HashMap<Integer, Node> map;
+    int capicity, count;
+    Node head, tail;
+
+    public LRUCache(int capacity) {
+        /* head and tail intial and refernce to head and tail */
+        this.capicity = capacity;
+        map = new HashMap<>();
+        head = new Node(0, 0);
+        tail = new Node(0, 0);
+        head.next = tail;
+        tail.pre = head;
+        count = 0;
+    }
+
+    /* to dlete node just change its prev next refrence and its nexts prev reference */
+    public void deleteNode(Node node) {
+        node.pre.next = node.next;
+        node.next.pre = node.pre;
+    }
+    
+    /* just change the pointers of the head and node */
+    public void addToHead(Node node) {
+        node.next = head.next;
+        node.next.pre = node;
+        node.pre = head;
+        head.next = node;
+    }
+    
+    /* getting the key delete it and add to the head and if key not present just return -1*/
+    public int get(int key) {
+        if (map.get(key) != null) {
+            Node node = map.get(key);
+            int result = node.value;
+            deleteNode(node);
+            addToHead(node);
+            return result;
+        }
+        return -1;
+    }
+
+    /* incase of adding new key we need to check if the keu is already there in the hashmap just update it else
+     just check capacity and if its out of capacity then delete and add new to head else just else add new to head */
+    public void set(int key, int value) {
+        if (map.get(key) != null) {
+            Node node = map.get(key);
+            node.value = value;
+            deleteNode(node);
+            addToHead(node);
+        } else {
+            Node node = new Node(key, value);
+            map.put(key, node);
+            if (count < capicity) {
+                count++;
+                addToHead(node);
+            } else {
+                map.remove(tail.pre.key);
+                deleteNode(tail.pre);
+                addToHead(node);
+            }
+        }
+    }
+
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
