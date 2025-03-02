@@ -1,0 +1,84 @@
+// Time Complexity : O(1)
+// Space Complexity : O(n) =>because  using hashmap to stor keys for O(1) lookup
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach: here implementing Node and using hashmap to store keys and corresponding nodes, when i have to get key value instead of itterating over linkedlist just checking from map in O(1) lookup. 
+//as well while put method called same thing like get i just checking over the map wheather the key exist or not if it is just updating the node val and removeing from node position and add it to head ,if it does not exit chekcing cap hashmap size is eqal to cap then  removing least Recent node from linkedlist as well remove particula r key from hashmap as well and adding new node to head and hashmap.
+class LRUCache {
+    class Node {
+        int key;
+        int val;
+        Node next;
+        Node prev;
+
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
+
+    private Node head;
+    private Node tail;
+    private int cap;
+    HashMap<Integer, Node> sMap;
+
+    public LRUCache(int capacity) {
+        this.sMap = new HashMap<>();
+        this.cap = capacity; //capacity initialization
+        this.head = new Node(-1, -1);
+        this.tail = new Node(-1, -1);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+    }
+
+    public void removeNode(Node node) { //O(1)
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
+    }
+
+    public void addToHead(Node node) {//O(1)
+        node.prev = head;
+        node.next = head.next;
+        head.next = node;
+        node.next.prev = node;
+
+    }
+
+    public int get(int key) {//O(1)
+        if (!sMap.containsKey(key))
+            return -1;
+        Node node = sMap.get(key);
+        removeNode(node);
+        addToHead(node);
+        return node.val;
+    }
+
+    public void put(int key, int value) {//O(1)
+        if (sMap.containsKey(key)) {
+            Node node = sMap.get(key);
+            node.val = value;
+            removeNode(node);
+            addToHead(node);
+        } else {
+            if (sMap.size() == cap) {
+                Node node = this.tail.prev;
+                removeNode(node);
+                sMap.remove(node.key);
+
+            }
+            Node node = new Node(key, value);
+            addToHead(node);
+            sMap.put(key, node);
+
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */

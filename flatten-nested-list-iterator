@@ -1,0 +1,125 @@
+// Time Complexity : O(n^2) where n is length of List<NestedInteger>
+// Space Complexity : O(1) =>because  using hashmap to stor keys for O(1) lookup
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach: bruteforce approach itterating over the nestedInteger list and if 
+i find that nestedInteger as integer then simply i am adding that to list otherwise calling recursion over the nestedInteger list.then adding integerto list
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+    List<Integer> li=new ArrayList<>();
+    int index=0;
+  public NestedIterator(List<NestedInteger> nestedList) {
+    helper(nestedList);
+    }
+     public void helper(List<NestedInteger> nestedList){
+        for(int i=0; i<nestedList.size(); i++){
+         NestedInteger curr=nestedList.get(i);
+         if(curr.isInteger()){
+            li.add(curr.getInteger());
+         }else{
+            helper(curr.getList());
+         }
+        }
+     }
+
+    @Override
+    public Integer next() { //O(1)
+        Integer re=li.get(index);
+        index++;
+        return re;
+    }
+
+    @Override
+    public boolean hasNext() { //O(1)
+       return li.size() != index;
+    }
+}
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
+
+
+
+
+
+// Time Complexity : O(h) where h is the max depth of nesting amortised is O(1) 
+// Space Complexity : O(h) where h is the max depth of nesting amortised is O(1) 
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach: here implementing NestedIterator by using native itterator by using stack we are doing lazy loading instead of loading all the nestedInteger at first because if we do that we may loose data whatever have done after loading into stack.
+
+
+
+ /**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+    Stack<Iterator<NestedInteger>> st=new Stack<>();
+     NestedInteger nextEl; 
+     public NestedIterator(List<NestedInteger> nestedList) {
+       st.push(nestedList.iterator());
+       }
+       
+       @Override
+       public Integer next() { //O(1)
+           return nextEl.getInteger();
+       }
+   
+       @Override
+       public boolean hasNext() {//O(h) maximum depth of nesting amortised O(1)
+           while(!st.isEmpty()){
+         if(!st.peek().hasNext()){
+           st.pop();
+          }else if((nextEl = st.peek().next()).isInteger()){
+           return true;
+          }else{
+           st.push(nextEl.getList().iterator());
+          }
+           }
+           return false;
+          
+       }
+   }
+   
+   /**
+    * Your NestedIterator object will be instantiated and called as such:
+    * NestedIterator i = new NestedIterator(nestedList);
+    * while (i.hasNext()) v[f()] = i.next();
+    */
