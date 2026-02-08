@@ -1,0 +1,76 @@
+// In this problem, we implement an LRU (Least Recently Used) Cache using a combination of a HashMap and a Doubly Linked List.
+// The HashMap provides O(1) access to cache items, while the Doubly Linked List maintains the order of usage, allowing us to efficiently update and evict the least recently used items.
+
+
+class LRUCache(private val capacity: Int) {
+
+    private val map = HashMap<Int, Node>()
+    private val head = Node(-1, -1)
+    private val tail = Node(-1, -1)
+
+    inner class Node(
+        var key: Int,
+        var value: Int
+    ) {
+        var prev: Node? = null
+        var next: Node? = null
+    }
+
+    init {
+        head.next = tail
+        tail.prev = head
+    }
+
+    private fun removeNode(node: Node) {
+        val prevNode = node.prev
+        val nextNode = node.next
+
+        prevNode?.next = nextNode
+        nextNode?.prev = prevNode
+
+        node.prev = null
+        node.next = null
+    }
+
+    private fun addToHead(node: Node) {
+        node.prev = head
+        node.next = head.next
+
+        head.next?.prev = node
+        head.next = node
+    }
+
+    fun get(key: Int): Int {
+        val node = map[key] ?: return -1
+        removeNode(node)
+        addToHead(node)
+        return node.value
+    }
+
+    fun put(key: Int, value: Int) {
+        if (map.containsKey(key)) {
+            val node = map[key]!!
+            node.value = value
+            removeNode(node)
+            addToHead(node)
+        } else {
+            if(map.size == capacity) {
+                val last = tail.prev!!
+                removeNode(last)
+                map.remove(last.key)
+            }
+
+            val newNode = Node(key, value) 
+            addToHead(newNode)
+            map[key] = newNode
+        }
+    }
+
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
