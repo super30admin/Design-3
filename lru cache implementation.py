@@ -29,3 +29,64 @@
 #
 # use dummy head and tail sentinels so every real node always has valid prev/next
 # layout: HEAD <-> [MRU ... LRU] <-> TAIL
+
+class LRUCache:
+    class Node:
+        def __init__(self,key,value):
+            self.key = key
+            self.value= value
+            self.prev=None
+            self.next=None
+
+    def __init__(self, capacity: int):
+        self.map={}
+        self.capacity = capacity
+        self.head= self.Node(-1,-1) #dummy head
+        self.tail=self.Node(-1,-1)  #dummy tail
+        #make initial connections
+        self.head.next=self.tail
+        self.tail.prev=self.head 
+
+    def removeNode(self,node):
+        node.next.prev=node.prev
+        node.prev.next=node.next
+        node.prev=None
+        node.next=None
+
+    def addtoHead(self,node):
+        node.prev=self.head
+        node.next=self.head.next
+        node.next.prev=node
+        self.head.next=node
+
+    def get(self, key: int) -> int:
+        #map doesnt contain the key
+        if key not in self.map:
+            return -1
+        #we get corresponding node ref, because we are maintaing integer and node in map
+        node= self.map[key]  #ie node ref.
+        self.removeNode(node)
+        self.addtoHead(node)
+        return node.value
+        
+    def put(self, key: int, value: int) -> None:
+        #2cases: 1) node already in map so just replace value and move it to most recent side
+        #2) node is fresh, if len(map)==capacity: ie remove least recently used node from the LL and also the map and make space to fresh node. ie add fresh node to both LL(to head) and map
+        if key in self.map:
+            node=self.map[key]
+            node.value = value
+            self.removeNode(node)
+            self.addtoHead(node)
+        else:
+            if len(self.map)==self.capacity:
+                lastNode=self.tail.prev
+                self.removeNode(lastNode)
+                del self.map[lastNode.key]
+            newNode=self.Node(key,value)
+            self.addtoHead(newNode)
+            self.map[key]=newNode
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
